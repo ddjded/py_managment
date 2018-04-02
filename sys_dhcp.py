@@ -19,9 +19,29 @@ def isValidMAC(mac_address):
 
 def addHost():
     # Entering DNS Server
-    SERVER = input("DNS Server [192.168.2.11] - ")
+    while True:
+        try:
+            SERVER = input("DNS Server [192.168.2.11] - ")
+            SERVER = '192.168.2.11'
+            break
+        except ValueError:
+            print("This is not a valid IP Address. Please try again")
     # Entering DNS Scope
-    SCOPE = input("Scope DNS [1 = 192.168.2.0] or [2 = 192.168.22.0] - ")
+    while True:
+        try:
+            SCOPE = input("Scope DNS [1 = 192.168.2.0] or [2 = 192.168.22.0] - ")
+            if SCOPE == 1:
+                print("SCOPE - 192.168.2.0 ")
+                SCOPE = '192.168.2.0'
+                break
+            elif SCOPE == 2:
+                print("SCOPE - 192.168.22.0 ")
+                SCOPE = '192.168.22.0'
+                break
+            else:
+                print("Invalis number. Try again...")   
+        except ValueError:
+            print("This is not a valid SCOPE. Please try again")
     # Entering host IP
     while True:
         try:
@@ -31,7 +51,16 @@ def addHost():
         except ValueError:
             print("This is not a valid IP Address. Please try again")
     # Entering host MAC
-    MAC = input("MAC - ")
+    while True:
+        try:
+            macaddress = input("MAC [XX-XX-XX-XX-XX-XX]- ")
+            if isValidMAC(macaddress) == "":
+                MAC = macaddress
+                break
+            else:
+                print("This is not a valid MAC Address. Please try again")
+        except ValueError:
+            print("This is not a valid MAC Address. Please try again")
     # Entering host Name
     NAME = input("Host Name - ")
     # Entering Description
@@ -42,10 +71,10 @@ def addHost():
     print(res)
 
     netshcmd = subprocess.Popen(
-        'netsh dhcp server ' + SERVER + ' scope ' 
-        + SCOPE + ' add reservedip ' 
-        + IP + ' ' 
-        + MAC + ' ' 
+        'netsh dhcp server ' + SERVER + ' scope '
+        + SCOPE + ' add reservedip '
+        + IP + ' '
+        + MAC + ' '
         + NAME + ' '
         + DESCRIPTION + ' BOTH', shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
     output, errors = netshcmd.communicate()
